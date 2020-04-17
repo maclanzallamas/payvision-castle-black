@@ -1,23 +1,36 @@
 const { Router } = require("express");
 const api = Router();
 
-// This will be your data source
-const players = [
-  { id: 1, name: "Jon Snow", age: 23, health: 100, bag: [1] },
-  { id: 2, name: "Littlefinger", age: 35, health: 100, bag: [2] },
-  { id: 3, name: "Daenerys Targaryen", age: 20, health: 100, bag: [3] },
-  { id: 4, name: "Samwell Tarly", age: 18, health: 100, bag: [4] }
-];
-const objects = [
-  { id: 1, name: "spoon", value: -1 },
-  { id: 2, name: "knife", value: -10 },
-  { id: 3, name: "sword", value: -20 },
-  { id: 4, name: "potion", value: +20 }
-];
+// Creating generic functions for managing the services and errors
+const successHandler = (response) => (data) => response.json(data);
+const errorHandler = (response) => (error, message) => response.status(400).json({ error, message });
 
-// EXAMPLE ENDPOINT: LIST ALL OBJECTS
-api.get("/objects", function(req, res) {
-  res.json(objects);
-});
+// Creation of a generic function to handle all endpoints. This helps to extract the body or params 
+// for all the requests and also to have a try catch that will "protect us" returning a 500 error in case something unexpected happens
+const handle = (service) => async (request, response) => {
+  const data = (request.body instanceof Array) ? request.body : { ...request.body, ...request.params };
+  try {
+    await service(
+      data,
+      successHandler(response),
+      errorHandler(response),
+     );
+  } catch (error) {
+    console.error(`Unhandled Exception - ${request.url}: `, error);
+    console.error(JSON.stringify(data));
+    errorHandler(response)('UNHANDLED_EXCEPTION');
+  }
+};
+
+api.get('/players', (req, res) => handle()(req,res));
+api.post('/player', (req, res) => handle()(req,res));
+api.get('/player/:id', (req, res) => handle()(req,res));
+api.patch('/armPlayer/:id', (req, res) => handle()(req,res));
+api.patch('/killPlayer/:id', (req, res) => handle()(req,res));
+api.post('/createObject', (req, res) => handle()(req,res));
+api.get('/object/:id', (req, res) => handle()(req,res));
+api.put('/upgradeObject/:id', (req, res) => handle()(req,res));
+api.delete('/object/:id', (req, res) => handle()(req,res));
+
 
 module.exports = api;
