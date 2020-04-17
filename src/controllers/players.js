@@ -34,10 +34,10 @@ const getPlayerById = (data, response) => {
   // TODO mario validate
   const player = players.filter((player) => player.id == id);
 
-  if (player) {
-    return response(200, player);
+  if (player >= 1) {
+    return response(200, player[0]);
   }
-  return response(404, player);
+  return response(404, `Player with ${id} not found`);
 };
 
 const armPlayer = (data, response) => {

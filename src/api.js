@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const api = Router();
 const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
-
+const { createObject, getObjectById, upgradeObject, destroyObject } = require('./controllers/objects');
 // Creating generic functions for managing the services and errors
 const responseHandler = (response) => (statusCode, data) => response.status(statusCode).json(data);
 
@@ -26,10 +26,10 @@ api.post('/player', (req, res) => handle(createPlayer)(req,res));
 api.get('/player/:id', (req, res) => handle(getPlayerById)(req,res));
 api.patch('/armPlayer/:id', (req, res) => handle(armPlayer)(req,res));
 api.patch('/killPlayer/:id', (req, res) => handle(killPlayer)(req,res));
-api.post('/createObject', (req, res) => handle()(req,res));
-api.get('/object/:id', (req, res) => handle()(req,res));
-api.put('/upgradeObject/:id', (req, res) => handle()(req,res));
-api.delete('/object/:id', (req, res) => handle()(req,res));
+api.post('/createObject', (req, res) => handle(createObject)(req,res));
+api.get('/object/:id', (req, res) => handle(getObjectById)(req,res));
+api.put('/upgradeObject/:id', (req, res) => handle(upgradeObject)(req,res));
+api.delete('/object/:id', (req, res) => handle(destroyObject)(req,res));
 
 
 module.exports = api;
