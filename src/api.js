@@ -2,6 +2,8 @@ const { Router } = require("express");
 const api = Router();
 const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
 const { createObject, getObjectById, upgradeObject, destroyObject } = require('./controllers/objects');
+const basicAuth = require('express-basic-auth')
+
 // Creating generic functions for managing the services and errors
 const responseHandler = (response) => (statusCode, data) => response.status(statusCode).json(data);
 
@@ -20,6 +22,17 @@ const handle = (service) => async (request, response) => {
     responseHandler(response)(500,'UNHANDLED_EXCEPTION');
   }
 };
+
+
+// This is of course a bad practice but is enough for this proof of concept. Usually you would have the users in a database or somewhere securely stored.
+// I have decided to use a node module (express-basic-auth) instead of building the authentication from scratch (no need to reinvent the wheel).
+// By default, this function will return a 401 Unauthorized if no Authorization header is provided or if it is incorrect.
+api.use(basicAuth({
+  users: {
+      'mario': 'mario123',
+      'payvision': 'payvision123',
+  }
+}))
 
 api.get('/players', (req, res) => handle(getPlayers)(req,res));
 api.post('/player', (req, res) => handle(createPlayer)(req,res));
