@@ -61,8 +61,8 @@ const armPlayer = (data, response) => {
 
   const player = players.filter((player) => player.id === id);
   
-  if (player.length >= 1){
-    return response(404, `We can not find player with id: ${playerId}`);
+  if (player.length < 1){
+    return response(404, `We can not find player with id: ${id}`);
   }
 
   // We assume that only one object can be armed at the same time. So if the player has 3 object that are the same, only the first one will be armed.
@@ -91,7 +91,7 @@ const killPlayer = (data, response) => {
 
   const player = players.filter((player) => player.id === id);
   
-  if (player.length >= 1){
+  if (player.length < 1){
     return response(404, `We can not find player with id: ${id}`);
   }
   player[0].health = 0;
@@ -101,6 +101,7 @@ const killPlayer = (data, response) => {
 
 
 module.exports = {
+  players,
   getPlayers,
   createPlayer,
   getPlayerById,

@@ -1,3 +1,5 @@
+const { players } = require('./players');
+
 const objects = [
   { id: 1, name: "spoon", value: -1 },
   { id: 2, name: "knife", value: -10 },
@@ -15,6 +17,7 @@ const createObject = (data, response) => {
     return response(400, 'Invalid body, name should be string and value should be number')
   }
 
+  // We always take the last id and add 1
   const objectId = objects.length > 0 ? objects[objects.length - 1].id + 1 : 1;
   const object = { id: objectId, name, value };
   objects.push(object)
@@ -35,7 +38,7 @@ const getObjectById = (data, response) => {
   if (object.length >= 1) {
     return response(200, object[0]);
   }
-  return response(404, `Object with ${id} not found`);
+  return response(404, `Object with id ${id} not found`);
 }
 
 const upgradeObject = (data, response) => {
@@ -56,7 +59,7 @@ const upgradeObject = (data, response) => {
     object[0].value = value;
     return response(204);
   }
-  return response(404, `Object with ${id} not found`);  
+  return response(404, `Object with id ${id} not found`);  
 }
 
 const destroyObject = (data, response) => {
@@ -68,16 +71,31 @@ const destroyObject = (data, response) => {
     return response(400, 'Invalid id. It should be an integer number');
   }
 
-  // Assuming that this only destroy the object from available objects, 
-  // but players that have the object currently in their bags or armed, will still have the object.
-
+  let objectExists = false;
+  // We remove the object from 3 places, the overall array of available objects, bag and hand of every player that have it.
   for (let i = 0; i < objects.length; i++) {
-    if (objects[i].id == id) {
+    if (objects[i].id === id) {
       objects.splice(i);
-      return response(200)
+      objectExists = true;
+      break;
     }
   }
-  return response(404, `Object with ${id} not found`); 
+  players.forEach((player) => {
+    player.bag.forEach((item, index) => {
+      if (item === id) {
+        player.bag.splice(index);
+      }
+    });
+    player.armedWith.forEach((item, index) => {
+      if (item === id) {
+        player.armedWith.splice(index);
+      }
+    });
+  });
+  if (objectExists) {
+    return response(200, `Object with id ${id} deleted`);
+  }
+  return response(404, `Object with id ${id} not found`); 
 }
 
 module.exports = {
