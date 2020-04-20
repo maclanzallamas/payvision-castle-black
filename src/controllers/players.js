@@ -16,7 +16,9 @@ const createPlayer = (data, response) => {
   } = data;
   // We assume to create a player you only need a name and its age. The id will be automatically generated and it will always start with 100 health and an empty bag
 
-  // TODO mario validate
+  if (typeof name !== "string" || typeof age !== "number") {
+    return response(400, 'Invalid body, name should be string and value should be number')
+  }
 
   // We assume that players is an array that have the ids in order, and players cannot be deleted from the array
   // Then we can get the last ID easily:
@@ -27,22 +29,26 @@ const createPlayer = (data, response) => {
 };
 
 const getPlayerById = (data, response) => {
-  const {
+  let {
     id
   } = data;
 
-  // TODO mario validate
-  const player = players.filter((player) => player.id == id);
+  try {
+    id = parseInt(id);
+  } catch (error) {
+    return response(400, 'Invalid id. It should be an integer number');
+  }
 
-  if (player >= 1) {
+  const player = players.filter((player) => player.id === id);
+
+  if (player.length >= 1) {
     return response(200, player[0]);
   }
   return response(404, `Player with ${id} not found`);
 };
 
 const armPlayer = (data, response) => {
-  // TODO mario validate
-  const {
+  let {
     id,
     objectId,
   } = data;
@@ -50,12 +56,12 @@ const armPlayer = (data, response) => {
   try {
     id = parseInt(id);
   } catch (error) {
-    
+    return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const player = players.filter((player) => player.id == id);
+  const player = players.filter((player) => player.id === id);
   
-  if (player >= 1){
+  if (player.length >= 1){
     return response(404, `We can not find player with id: ${playerId}`);
   }
 
@@ -73,19 +79,19 @@ const armPlayer = (data, response) => {
 };
 
 const killPlayer = (data, response) => {
-  const {
+  let {
     id
   } = data;
-  // TODO mario validate
+
   try {
     id = parseInt(id);
   } catch (error) {
-    
+    return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const player = players.filter((player) => player.id == id);
+  const player = players.filter((player) => player.id === id);
   
-  if (player >= 1){
+  if (player.length >= 1){
     return response(404, `We can not find player with id: ${id}`);
   }
   player[0].health = 0;

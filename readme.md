@@ -13,6 +13,9 @@ For doing that we could either use res.send() or res.json() and pass it as an ar
  - Created a Postman collection (it is in 'docs' folder)
  - Created a Swagger page under /docs path. It just contains two examples, but it can be another alternative to Postman
 
+# Validation
+I have included a very basic validation in the endpoints, just checking if the variables are strings or numbers. There are better ways to do this, as I have repeated a lot of code. An improvement would be to create a utils file where we could define different validation that would be used across all endpoints.
+
 ### Required endpoints
 
 You have to create endpoints (as many as you consider) to support the following functionality:

@@ -11,7 +11,9 @@ const createObject = (data, response) => {
     value
   } = data;
 
-  // TODO mario validate
+  if (typeof name !== "string" || typeof value !== "number") {
+    return response(400, 'Invalid body, name should be string and value should be number')
+  }
 
   const objectId = objects.length > 0 ? objects[objects.length - 1].id + 1 : 1;
   const object = { id: objectId, name, value };
@@ -20,16 +22,15 @@ const createObject = (data, response) => {
 }
 
 const getObjectById = (data, response) => {
-  const { id } = data;
+  let { id } = data;
 
-  // TODO mario validate
   try {
     id = parseInt(id);
   } catch (error) {
-    
+    return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const object = objects.filter((object) => object.id == id);
+  const object = objects.filter((object) => object.id === id);
 
   if (object.length >= 1) {
     return response(200, object[0]);
@@ -38,16 +39,18 @@ const getObjectById = (data, response) => {
 }
 
 const upgradeObject = (data, response) => {
-  const { id, value } = data;
+  let { id, value } = data;
 
-  // TODO mario validate
+  if (typeof value !== "number") {
+    return response(400, 'Invalid body, value should be number');
+  }
   try {
     id = parseInt(id);
   } catch (error) {
-    
+    return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const object = objects.filter((object) => object.id == id);
+  const object = objects.filter((object) => object.id === id);
 
   if (object.length >= 1) {
     object[0].value = value;
@@ -57,13 +60,12 @@ const upgradeObject = (data, response) => {
 }
 
 const destroyObject = (data, response) => {
-  const { id } = data;
+  let { id } = data;
 
-  // TODO mario validate
   try {
     id = parseInt(id);
   } catch (error) {
-    
+    return response(400, 'Invalid id. It should be an integer number');
   }
 
   // Assuming that this only destroy the object from available objects, 
