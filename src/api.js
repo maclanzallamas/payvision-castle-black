@@ -1,23 +1,48 @@
 const { Router } = require("express");
 const api = Router();
+const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
+const { createObject, getObjectById, upgradeObject, destroyObject } = require('./controllers/objects');
+const basicAuth = require('express-basic-auth');
 
-// This will be your data source
-const players = [
-  { id: 1, name: "Jon Snow", age: 23, health: 100, bag: [1] },
-  { id: 2, name: "Littlefinger", age: 35, health: 100, bag: [2] },
-  { id: 3, name: "Daenerys Targaryen", age: 20, health: 100, bag: [3] },
-  { id: 4, name: "Samwell Tarly", age: 18, health: 100, bag: [4] }
-];
-const objects = [
-  { id: 1, name: "spoon", value: -1 },
-  { id: 2, name: "knife", value: -10 },
-  { id: 3, name: "sword", value: -20 },
-  { id: 4, name: "potion", value: +20 }
-];
+// Creating generic functions for managing the services and errors
+const responseHandler = (response) => (statusCode, data) => response.status(statusCode).json(data);
 
-// EXAMPLE ENDPOINT: LIST ALL OBJECTS
-api.get("/objects", function(req, res) {
-  res.json(objects);
-});
+// Creation of a generic function to handle all endpoints. This helps to extract the body or params 
+// for all the requests and also to have a try catch that will "protect us" returning a 500 error in case something unexpected happens
+const handle = (service) => async (request, response) => {
+  const data = (request.body instanceof Array) ? request.body : { ...request.body, ...request.params };
+  try {
+    await service(
+      data,
+      responseHandler(response),
+     );
+  } catch (error) {
+    console.error(`Unhandled Exception - ${request.url}: `, error);
+    console.error(JSON.stringify(data));
+    responseHandler(response)(500,'UNHANDLED_EXCEPTION');
+  }
+};
+
+
+// This is of course a bad practice but is enough for this proof of concept. Usually you would have the users in a database or somewhere securely stored.
+// I have decided to use a node module (express-basic-auth) instead of building the authentication from scratch (no need to reinvent the wheel).
+// By default, this function will return a 401 Unauthorized if no Authorization header is provided or if it is incorrect.
+api.use(basicAuth({
+  users: {
+      'mario': 'mario123',
+      'payvision': 'payvision123',
+  }
+}))
+
+api.get('/players', (req, res) => handle(getPlayers)(req,res));
+api.post('/player', (req, res) => handle(createPlayer)(req,res));
+api.get('/player/:id', (req, res) => handle(getPlayerById)(req,res));
+api.patch('/armPlayer/:id', (req, res) => handle(armPlayer)(req,res));
+api.patch('/killPlayer/:id', (req, res) => handle(killPlayer)(req,res));
+api.post('/createObject', (req, res) => handle(createObject)(req,res));
+api.get('/object/:id', (req, res) => handle(getObjectById)(req,res));
+api.put('/upgradeObject/:id', (req, res) => handle(upgradeObject)(req,res));
+api.delete('/object/:id', (req, res) => handle(destroyObject)(req,res));
+
 
 module.exports = api;

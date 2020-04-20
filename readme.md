@@ -1,12 +1,20 @@
-# REST API implementation
+# Questions
+#### app.disable("x-powered-by"); // QUESTION: any reason is this line here?
+This is a header that is sent with every response and will tell that the server is running using the Express framework, which is a security issue, as we can give too much information to a possible attacker. (The attacker could search for Express exploits more easily knowing we are using it!)
 
-This is a Game of Thrones inspired REST API game. You are responsible to create the engine of the game.
+Even the official express documentation recommends using it, or you can even go a step further and use helmet, a library that helps you securing your response headers: http://expressjs.com/en/advanced/best-practice-security.html#use-helmet
 
-## Your tasks
+#### res.body = "Up and running"; // QUESTION: why this endpoint blocks the app?
+In every request we need to send a response back from the server. In this case, the res.body is actually not doing anything, not even setting the response body.
 
-1. Implement the endpoints in **./src/api.js** file with the most suitable code for players and objects management REST API. You will find detailed instructions in this file.
-2. Write some tests for your code. Use test folder for this purpose.
-3. Answer all commented questions you find in the code.
+For doing that we could either use res.send() or res.json() and pass it as an argument. We need to use either res.end, res.send or res.json to send a response. In this case we could use res.send("Up and running"), for example.
+
+# Documentation
+ - Created a Postman collection (it is in 'docs' folder)
+ - Created a Swagger page under /docs path. It just contains two examples, but it can be another alternative to Postman
+
+# Validation
+I have included a very basic validation in the endpoints, just checking if the variables are strings or numbers. There are better ways to do this, as I have repeated a lot of code. An improvement would be to create a utils file where we could define different validation that would be used across all endpoints.
 
 ### Required endpoints
 
@@ -24,8 +32,10 @@ You have to create endpoints (as many as you consider) to support the following 
 
 **Bonus:**
 
-1. Include a postman collection in utils folder to test the app.
-2. Add basic authentication to /api path.
+1. Include a postman collection in utils folder to test the app. (Included in /docs folder)
+2. Add basic authentication to /api path. Done. You can use: 
+   1. User: mario, Pass: mario123
+   2. User: payvision, Pass: payvision123
 3. Implement pick up item endpoint: one player add to its bag one item that doesn't belong to any other player.
 4. Implement attack player endpoint: one player attacks another player using an object from its bag. Adjust health accordingly
 5. Implement steal bag from player endpoint: one player steals everything from another player. Bag objects are moved from one player to another.
