@@ -2,7 +2,7 @@ const { Router } = require("express");
 const api = Router();
 const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
 const { createObject, getObjectById, upgradeObject, destroyObject } = require('./controllers/objects');
-const basicAuth = require('express-basic-auth')
+const basicAuth = require('express-basic-auth');
 
 // Creating generic functions for managing the services and errors
 const responseHandler = (response) => (statusCode, data) => response.status(statusCode).json(data);

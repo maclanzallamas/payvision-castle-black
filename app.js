@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const consola = require("consola");
 const router = require("./src/router.js");
 const api = require("./src/api.js");
+const swaggerUi = require('swagger-ui-express');
+const {swaggerDocument} = require('./docs/swaggerDocs');
 
 const app = express();
-const host = process.env.HOST || "0.0.0.0";
+const host = process.env.HOST || "localhost"; //changed as 0.0.0.0 cannot be resolved in the browser using a windows machine.
 const port = process.env.PORT || 8080;
 app.set("port", port);
 
@@ -23,6 +25,7 @@ async function run() {
 
   app.use("/", router);
   app.use("/api", api);
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   const server = http.createServer(app);
 
