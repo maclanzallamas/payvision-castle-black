@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const api = Router();
 const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
-const { createObject, getObjectById, upgradeObject, destroyObject } = require('./controllers/objects');
+const { createObject, getObjectById, upgradeObject, destroyObject, pickUpObject } = require('./controllers/objects');
 const basicAuth = require('express-basic-auth');
 
 // Creating generic functions for managing the services and errors
@@ -19,7 +19,7 @@ const handle = (service) => async (request, response) => {
   } catch (error) {
     console.error(`Unhandled Exception - ${request.url}: `, error);
     console.error(JSON.stringify(data));
-    responseHandler(response)(500,'UNHANDLED_EXCEPTION');
+    responseHandler(response)(500,`UNHANDLED_EXCEPTION. ${error.message}`);
   }
 };
 
@@ -43,6 +43,7 @@ api.post('/createObject', (req, res) => handle(createObject)(req,res));
 api.get('/object/:id', (req, res) => handle(getObjectById)(req,res));
 api.put('/upgradeObject/:id', (req, res) => handle(upgradeObject)(req,res));
 api.delete('/object/:id', (req, res) => handle(destroyObject)(req,res));
+api.patch('/pickUpObject', (req, res) => handle(pickUpObject)(req,res));
 
 
 module.exports = api;

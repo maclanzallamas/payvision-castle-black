@@ -75,7 +75,7 @@ const armPlayer = (data, response) => {
     }
   }
 
-  return response(404, `We can not find object with id: ${objectId} in player's ${playerId} bag.`);
+  return response(404, `We can not find object with id: ${objectId} in player's ${id} bag.`);
 };
 
 const killPlayer = (data, response) => {

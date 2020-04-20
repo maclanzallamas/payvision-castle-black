@@ -1,4 +1,4 @@
-const { players } = require('./players');
+const { players, armPlayer } = require('./players');
 
 const objects = [
   { id: 1, name: "spoon", value: -1 },
@@ -98,9 +98,30 @@ const destroyObject = (data, response) => {
   return response(404, `Object with id ${id} not found`); 
 }
 
+const pickUpObject = (data, response) => {
+  // Assuming a random player gets one random item that no other users have
+  // First we get the object that are not assigned to anyone
+  let allObjectsTakenByPlayers = [];
+  players.forEach((player) => {
+    allObjectsTakenByPlayers.push(player.bag.concat(player.armedWith))
+  });
+  allObjectsTakenByPlayers = allObjectsTakenByPlayers.flat();
+
+  // We filter the objects array to get the ones not used and then we take a random one
+  const freeObjects = objects.filter((object) => !allObjectsTakenByPlayers.includes(object.id));
+  const randomObject = freeObjects[Math.floor(Math.random() * freeObjects.length)];
+  const randomPlayer = Math.floor(Math.random() * players.length) + 1;
+  
+  if (randomObject != undefined && randomPlayer != undefined) {
+    return armPlayer({id: randomPlayer, objectId: randomObject}, response);
+  }
+  return response(404, "There are no objects free");
+}
+
 module.exports = {
   createObject,
   getObjectById,
   upgradeObject,
   destroyObject,
+  pickUpObject,
 }
