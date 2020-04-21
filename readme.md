@@ -16,6 +16,9 @@ For doing that we could either use res.send() or res.json() and pass it as an ar
 # Validation
 I have included a very basic validation in the endpoints, just checking if the variables are strings or numbers. There are better ways to do this, as I have repeated a lot of code. An improvement would be to create a utils file where we could define different validation that would be used across all endpoints.
 
+# Testing
+I have added a few example tests with jest. This test are actually calling the endpoints because we are running locally the server while testing.
+
 ### Required endpoints
 
 You have to create endpoints (as many as you consider) to support the following functionality:
@@ -68,6 +71,10 @@ Start a local server
 A local server will start on port 8080.
 
 > http://localhost:8080
+
+Run tests
+
+> yarn test
 
 ## How to run the application using Docker
 
