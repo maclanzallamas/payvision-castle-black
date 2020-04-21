@@ -19,6 +19,16 @@ I have included a very basic validation in the endpoints, just checking if the v
 # Testing
 I have added a few example tests with jest. This test are actually calling the endpoints because we are running locally the server while testing.
 
+# Git graph for the reviewer information
+![Git Graph](docs/GitGraph.PNG)
+
+# Other considerations
+- I have tried to use the REST "verbs" as adequate as possible
+ ![Git Graph](docs/REST.PNG) (https://www.restapitutorial.com/lessons/httpmethods.html)
+- I have used arrow functions and other ES6 syntax
+- Project structure might not be the best one, as in bigger projects it would make sense to split each endpoint in a different file.
+- Bonus endpoints 5 to 8 are NOT implemented
+
 ### Required endpoints
 
 You have to create endpoints (as many as you consider) to support the following functionality:
