@@ -1,9 +1,7 @@
-const players = [
-  { id: 1, name: "Jon Snow", age: 23, health: 100, bag: [1], armedWith: [] },
-  { id: 2, name: "Littlefinger", age: 35, health: 100, bag: [2], armedWith: [] },
-  { id: 3, name: "Daenerys Targaryen", age: 20, health: 100, bag: [3], armedWith: [] },
-  { id: 4, name: "Samwell Tarly", age: 18, health: 100, bag: [4], armedWith: [] }
-];
+const { players, objects } = require('../data/index');
+const { getObjectById } = require('./objects');
+
+const getPlayerById = (id) => players.filter((player) => player.id === id);
 
 const getPlayers = (data, response) => {
   return response(200, players)
@@ -28,7 +26,7 @@ const createPlayer = (data, response) => {
   return response(201, player)
 };
 
-const getPlayerById = (data, response) => {
+const getPlayerByIdEndpoint = (data, response) => {
   let {
     id
   } = data;
@@ -39,7 +37,7 @@ const getPlayerById = (data, response) => {
     return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const player = players.filter((player) => player.id === id);
+  const player = getPlayerById(id);
 
   if (player.length >= 1) {
     return response(200, player[0]);
@@ -59,23 +57,18 @@ const armPlayer = (data, response) => {
     return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const player = players.filter((player) => player.id === id);
+  const player = getPlayerById(id);
   
-  if (player.length >= 1){
-    return response(404, `We can not find player with id: ${playerId}`);
+  if (player.length < 1){
+    return response(404, `We can not find player with id: ${id}`);
   }
 
-  // We assume that only one object can be armed at the same time. So if the player has 3 object that are the same, only the first one will be armed.
-  for (let i = 0; i < player[0].bag.length; i++) {
-    // We get the first object that we find. Delete it from the array and added to the armed objects
-    if (objectId == player[0].bag[i]) {
-      player[0].bag.splice(i);
-      player[0].armedWith.push(objectId);
-      return response(204)
-    }
+  // We assume that only one object can be armed at the same time using this endpoint.
+  if (getObjectById(objectId).length < 1) {
+    return response(404, `We can not find the object with id: ${objectId}`);
   }
-
-  return response(404, `We can not find object with id: ${objectId} in player's ${playerId} bag.`);
+  player[0].bag.push(objectId);
+  return response(204)
 };
 
 const killPlayer = (data, response) => {
@@ -89,9 +82,9 @@ const killPlayer = (data, response) => {
     return response(400, 'Invalid id. It should be an integer number');
   }
 
-  const player = players.filter((player) => player.id === id);
+  const player = getPlayerById(id);
   
-  if (player.length >= 1){
+  if (player.length < 1){
     return response(404, `We can not find player with id: ${id}`);
   }
   player[0].health = 0;
@@ -99,11 +92,42 @@ const killPlayer = (data, response) => {
   return response(204);
 };
 
+const attack = (data, response) => {
+  const {
+    attackerId,
+    defenderId,
+  } = data;
+
+  // We assume that the player will attack with everything that has armed. If it does not have anything it wont do any damage!
+  const attacker = getPlayerById(attackerId);
+  const defender = getPlayerById(defenderId);
+
+  if (attacker == undefined || attacker.length <= 0) {
+    return response (404, `Attacker with id ${attackerId} not found`);
+  }
+  if (defender == undefined || defender.length <= 0) {
+    return response (404, `Defender with id ${attackerId} not found`);
+  }
+
+  const objectsAttacker = [];
+  attacker[0].bag.forEach((item) => objectsAttacker.push(getObjectById(item))) //Get the objects that the attacker has in the bag
+  const sumDamage = objectsAttacker.flat().reduce((total, object) => total += object.value,0);
+
+  if (defender[0].health - sumDamage <= 0) {
+    defender[0].health = 0;
+    return response(200, `Attacker ${attackerId} has killed player ${defenderId}`);
+  }
+  // Assuming that a negative will heal the defender.
+  defender[0].health -= sumDamage;
+  return response(200, `Player ${defenderId} has ${defender[0].health} points of health left`);
+}
 
 module.exports = {
+  getPlayerById,
   getPlayers,
   createPlayer,
-  getPlayerById,
+  getPlayerByIdEndpoint,
   armPlayer,
   killPlayer,
+  attack,
 }
