@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const api = Router();
-const { getPlayers, createPlayer, getPlayerById, armPlayer, killPlayer } = require('./controllers/players');
-const { createObject, getObjectById, upgradeObject, destroyObject, pickUpObject } = require('./controllers/objects');
+const { getPlayers, createPlayer, getPlayerByIdEndpoint, armPlayer, killPlayer, attack } = require('./controllers/players');
+const { createObject, getObjectByIdEndpoint, upgradeObject, destroyObject, pickUpObject } = require('./controllers/objects');
 const basicAuth = require('express-basic-auth');
 
 // Creating generic functions for managing the services and errors
@@ -36,14 +36,14 @@ api.use(basicAuth({
 
 api.get('/players', (req, res) => handle(getPlayers)(req,res));
 api.post('/player', (req, res) => handle(createPlayer)(req,res));
-api.get('/player/:id', (req, res) => handle(getPlayerById)(req,res));
+api.get('/player/:id', (req, res) => handle(getPlayerByIdEndpoint)(req,res));
 api.patch('/armPlayer/:id', (req, res) => handle(armPlayer)(req,res));
 api.patch('/killPlayer/:id', (req, res) => handle(killPlayer)(req,res));
 api.post('/createObject', (req, res) => handle(createObject)(req,res));
-api.get('/object/:id', (req, res) => handle(getObjectById)(req,res));
+api.get('/object/:id', (req, res) => handle(getObjectByIdEndpoint)(req,res));
 api.put('/upgradeObject/:id', (req, res) => handle(upgradeObject)(req,res));
 api.delete('/object/:id', (req, res) => handle(destroyObject)(req,res));
 api.patch('/pickUpObject', (req, res) => handle(pickUpObject)(req,res));
-
+api.post('/attack', (req, res) => handle(attack)(req,res));
 
 module.exports = api;

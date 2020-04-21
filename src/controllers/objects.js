@@ -1,11 +1,7 @@
-const { players, armPlayer } = require('./players');
+const { players, objects } = require('../data/index');
+const { armPlayer } = require('./players');
 
-const objects = [
-  { id: 1, name: "spoon", value: -1 },
-  { id: 2, name: "knife", value: -10 },
-  { id: 3, name: "sword", value: -20 },
-  { id: 4, name: "potion", value: +20 }
-];
+const getObjectById = (id) => objects.filter((object) => object.id === id);
 
 const createObject = (data, response) => {
   const {
@@ -24,7 +20,7 @@ const createObject = (data, response) => {
   return response(201, object)
 }
 
-const getObjectById = (data, response) => {
+const getObjectByIdEndpoint = (data, response) => {
   let { id } = data;
 
   try {
@@ -86,11 +82,6 @@ const destroyObject = (data, response) => {
         player.bag.splice(index);
       }
     });
-    player.armedWith.forEach((item, index) => {
-      if (item === id) {
-        player.armedWith.splice(index);
-      }
-    });
   });
   if (objectExists) {
     return response(200, `Object with id ${id} deleted`);
@@ -103,7 +94,7 @@ const pickUpObject = (data, response) => {
   // First we get the object that are not assigned to anyone
   let allObjectsTakenByPlayers = [];
   players.forEach((player) => {
-    allObjectsTakenByPlayers.push(player.bag.concat(player.armedWith))
+    allObjectsTakenByPlayers.push(player.bag)
   });
   allObjectsTakenByPlayers = allObjectsTakenByPlayers.flat();
 
@@ -119,8 +110,9 @@ const pickUpObject = (data, response) => {
 }
 
 module.exports = {
-  createObject,
   getObjectById,
+  createObject,
+  getObjectByIdEndpoint,
   upgradeObject,
   destroyObject,
   pickUpObject,
