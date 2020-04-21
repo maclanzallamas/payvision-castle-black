@@ -8,6 +8,21 @@
 		{
 			"name": "Get Players",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -27,6 +42,21 @@
 		{
 			"name": "Create Player",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -62,6 +92,21 @@
 		{
 			"name": "Get Player by ID",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -82,6 +127,21 @@
 		{
 			"name": "Arm Player",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PATCH",
 				"header": [],
 				"body": {
@@ -111,6 +171,21 @@
 		{
 			"name": "Kill Player",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PATCH",
 				"header": [],
 				"body": {
@@ -140,11 +215,26 @@
 		{
 			"name": "Create Object",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"\",\n\t\"value\": 10\n}",
+					"raw": "{\n\t\"name\": \"marioTest\",\n\t\"value\": 10\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -168,6 +258,21 @@
 		{
 			"name": "Get Object By ID",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -235,7 +340,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/object/2",
+					"raw": "localhost:8080/api/object/3",
 					"host": [
 						"localhost"
 					],
@@ -243,7 +348,84 @@
 					"path": [
 						"api",
 						"object",
-						"2"
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PickUpObject",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pickUpObject",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pickUpObject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attack",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mario123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "mario",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"attackerId\": 1,\n\t\"defenderId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/attack",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"attack"
 					]
 				}
 			},
