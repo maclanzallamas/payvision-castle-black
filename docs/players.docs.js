@@ -25,11 +25,7 @@ const getPlayers = {
                 "bag": {
                   "type": "array",
                   "items": { "type": "number" }
-                },
-                "armedWith": {
-                  "type": "array",
-                  "items": { "type": "number" }
-                },
+                }
               }
             }
           }

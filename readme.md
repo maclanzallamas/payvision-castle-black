@@ -16,6 +16,9 @@ For doing that we could either use res.send() or res.json() and pass it as an ar
 # Validation
 I have included a very basic validation in the endpoints, just checking if the variables are strings or numbers. There are better ways to do this, as I have repeated a lot of code. An improvement would be to create a utils file where we could define different validation that would be used across all endpoints.
 
+# Testing
+I have added a few example tests with jest. This test are actually calling the endpoints because we are running locally the server while testing.
+
 ### Required endpoints
 
 You have to create endpoints (as many as you consider) to support the following functionality:
@@ -37,7 +40,7 @@ You have to create endpoints (as many as you consider) to support the following 
    1. User: mario, Pass: mario123
    2. User: payvision, Pass: payvision123
 3. Implement pick up item endpoint: one player add to its bag one item that doesn't belong to any other player.
-4. Implement attack player endpoint: one player attacks another player using an object from its bag. Adjust health accordingly
+4. Implement attack player endpoint: one player attacks another player using an object from its bag. Adjust health accordingly. (Assuming that a negative will heal the defender.)
 5. Implement steal bag from player endpoint: one player steals everything from another player. Bag objects are moved from one player to another.
 6. Implement resurrect player endpoint: bring back to life a dead player using its id.
 7. Implement use object endpoint: a player use an object against another player or itself.
@@ -68,6 +71,10 @@ Start a local server
 A local server will start on port 8080.
 
 > http://localhost:8080
+
+Run tests
+
+> yarn test
 
 ## How to run the application using Docker
 

@@ -37,3 +37,5 @@ async function run() {
 }
 
 run();
+
+module.exports = app; // We do this for testing
